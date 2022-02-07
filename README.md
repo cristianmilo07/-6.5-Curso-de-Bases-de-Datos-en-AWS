@@ -6,7 +6,7 @@ _____________________________________________________________________
 ### Introducción al documento
 _____________________________________________________________________
 El contenido de este documento esta basado en el curso del mismo nombre dictado por Mauro Parra Miranda en Platzi.
-
+  
 **Table of Contents**
 
 [TOCM]
@@ -68,3 +68,78 @@ Tengan mucho cuidado con el presupuesto y especialmente con servicios como Glue,
 En esta clase vamos a conectarnos a nuestra base de datos por medio del bash de Linux. Para esto, debemos crear la instancia de un servidor de AWS con un grupo de seguridad que posteriormente vamos a configurar para que la base de datos y el servidor sean accesibles entre ellos.
 
 El desafió de esta clase es identificar al menos 2 características de RDS que actualmente no tenemos en otros sistemas bases de datos.
+
+# 7. Base de Datos corporativa en RDS
+
+¡Hola! Como primer proyecto para este curso vas a poner en práctica tus conocimientos para desplegar, conectar, consultar y recuperar una base de datos en RDS.
+
+Eres el arquitecto de soluciones de una empresa y el CEO te ha pedido que despliegues una base de datos que contenga información de los trabajadores que ingresaron durante la primer semana del mes, la información es la siguiente:
+
+Tabla # 1 - Trabajadores.
+
+Captura de pantalla 2018-11-21 a la(s) 13.44.14.png
+Despliega la Base de datos RDS (MySQL) y conéctate a través de MySQL Workbench.
+Crea una tabla de trabajadores con los campos ID, Nombre, Fecha de Ingreso, Fecha de Nacimiento y Cargo.
+Ingresa los datos mostrados en la tabla # 1 - Trabajadores.
+Ahora conéctalos a la base de datos a través de una instancia EC2 usando la CLI y observa la tabla que creaste gráficamente.
+Luego de haber creado la tabla, ingresó un empleado:
+Juan Camilo Rodriguez.
+Fecha de Ingreso → 10/10/2018
+Fecha de Nacimiento → 25/08/1991
+Cargo → Software Engineer Senior
+Ingresar el registro del nuevo empleado.
+
+Ahora quieres probar las funcionalidades de Backup de la base de datos y para eso, vas a restaurar la base de datos al momento anterior al cual agregaste el último ingreso (Juan Camilo Rodriguez).
+
+Restaura la base de datos al momento anterior al ingreso del último usuario.
+Consulta la tabla trabajadores y verifica su estado.
+Verifica la tabla y evidencia que contenga solo los 5 registros iniciales.
+Por último, envía un diagrama de arquitectura al CIO de la Base de Datos en Alta Disponibilidad y con optimización de performance.
+
+# 8. Estrategias de backup
+
+Los sistemas de backup manuales de RDS son completamente nuestra responsabilidad y debemos determinar cuándo tomar estos snapshots. Recuerda qué estos backups son incrementales, pueden mantener la información incluso cuando borramos la base de datos y nos permiten migrar la información entre diferentes regiones.
+
+Por otra parte, los backups automáticos se hacen a diario, pero las operaciones de entrada y salida pueden quedar suspendidas por algunos segundos. Para solucionar este problema, es recomendado trabajar con despliegues Multi-AZ, que nos permiten utilizar una instancia de reserva de la base de datos cuando la instancia principal no se encuentra disponible.
+
+El precio de nuestros backups depende de dos cosas: la retención (el tiempo que tenemos disponibles nuestros backups, máximo 35 días) y la cantidad almacenamiento que utilizamos (storage).
+
+Lecturas recomendadas
+
+Despliegues Multi-AZ de Amazon RDS
+
+https://aws.amazon.com/es/rds/details/multi-az/
+
+# 9. Demo estrategias de backup
+
+# 10. Estrategias de performance en RDS
+
+En esta clase vamos a aprender cómo identificar el rendimiento de nuestra base de datos, estrategias para mejorar su rendimiento actual y todas las opciones de performance de AWS.
+
+A nivel de monitoreo, AWS nos provee un servicio llamado CloudWatch que nos permite visualizar los niveles de lectura, escritura, CPU, disco y memoria de la instancia dónde corre nuestra base de datos, también podemos analizar las métricas de conexiones para determinar la carga y la concurrencia de nuestras instancias.
+
+La primer estrategia para mejorar el performance son las replicas de lectura, copias asíncronas de nuestra base de datos principal con un nuevo endpoint que vamos a utilizar solo en tareas de lectura, así obtenemos mucha más disponibilidad para tareas de escritura en nuestra base de datos principal. Recuerda que este servicio no esta disponible para los motores de Oracle y SQL Server.
+
+También podemos mejorar el storage de nuestra base de datos utilizando provisioned iops para soportar altas operaciones de entrada y salida sobre la base de datos, principalmente para transacciones OLTP (OnLine Transaction Processing).
+
+Existen otras alternativas como las bases de datos en memoria (ElastiCache, por ejemplo). Estas opciones resultan muy útiles para guardar la información más consultada en cache, así aliviamos un poco la carga de nuestra base de datos principal. Si estamos muy saturados y agotamos todas las opciones para mejorar el performance, la recomendación es dividir nuestra base de datos en otras más pequeñas.
+
+# 11. Despliegues Multi AZ
+
+El servicio de Multi AZ nos permite aumentar la disponibilidad de nuestro servicio realizando despliegues de nuestra base de datos en diferentes zonas. Cuando nuestra base de datos principal tenga problemas de disponibilidad, AWS automáticamente conectará nuestra aplicación con la base de datos replica en la segunda zona de disponibilidad. Recuerda que el precio de este servicio es equivalente a tener 2 bases de datos.
+
+El desafío de esta clase es identificar un caso de uso en tu empresa, universidad o algún proyecto personal dónde podemos utilizar RDS, recuerda explicar cuál es la funcionalidad qué más llama tu atención y por qué.
+
+# 12. Estrategias de migración a RDS
+
+DMS (Database Migration Service) es un servicio de AWS que nos permite migrar nuestras bases de datos con otros motores al servicio de RDS u otros servicios de bases de datos en AWS.
+
+Este servicio tiene las siguientes características:
+
+
+  Podemos realizar migraciones de bases de datos on premise o en la nube a los servicios de bases de datos en AWS sin afectar el downtime de la base de datos que vamos a migrar.
+La carga de trabajo durante las migraciones es adaptable.
+Solo pagamos por los recursos que utilizamos en la migración.
+AWS administra la infraestructura necesaria para el trabajo de la migración, Hardware, Software, parches, etc.
+Conmutación por error automática, si AWS detecta un error en el proceso automáticamente creará una nueva instancia para remplazar la anterior, así el proceso de replicación no se ve afectado por estos problemas.
+Los datos en reposo están cifrados con KMS (Key Management Service) y la migración utiliza el protocolo de seguridad SSL.
