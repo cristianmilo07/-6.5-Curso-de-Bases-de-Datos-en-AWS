@@ -137,9 +137,58 @@ DMS (Database Migration Service) es un servicio de AWS que nos permite migrar nu
 Este servicio tiene las siguientes características:
 
 
-  Podemos realizar migraciones de bases de datos on premise o en la nube a los servicios de bases de datos en AWS sin afectar el downtime de la base de datos que vamos a migrar.
-La carga de trabajo durante las migraciones es adaptable.
-Solo pagamos por los recursos que utilizamos en la migración.
-AWS administra la infraestructura necesaria para el trabajo de la migración, Hardware, Software, parches, etc.
-Conmutación por error automática, si AWS detecta un error en el proceso automáticamente creará una nueva instancia para remplazar la anterior, así el proceso de replicación no se ve afectado por estos problemas.
-Los datos en reposo están cifrados con KMS (Key Management Service) y la migración utiliza el protocolo de seguridad SSL.
+ 	-Podemos realizar migraciones de bases de datos on premise o en la nube a los servicios de bases de datos en AWS sin afectar el downtime de la base de datos que vamos a migrar.
+ 	-La carga de trabajo durante las migraciones es adaptable.
+ 	-Solo pagamos por los recursos que utilizamos en la migración.
+ 	-AWS administra la infraestructura necesaria para el trabajo de la migración, Hardware, Software, parches, etc.
+ 	-Conmutación por error automática, si AWS detecta un error en el proceso automáticamente creará una nueva instancia para remplazar la anterior, así el proceso de replicación no se ve afectado por estos problemas.
+ 	-Los datos en reposo están cifrados con KMS (Key Management Service) y la migración utiliza el protocolo de seguridad SSL.
+  
+# 13. Migraciones homogéneas y heterogéneas
+
+Las migraciones homogéneas son migraciones donde la base de datos de origen y la de destino puede tener diferentes versiones del mismo motor, o son bases de datos compatibles entre sí (MySQL y Aurora, por ejemplo).
+
+También podemos realizar migraciones heterogéneas, donde la base de datos de origen no es compatible con la de destino. Estas migraciones NO siempre son posibles, y antes de realizar la migración vamos a necesitar convertir el esquema de la base de datos con la herramienta AWS Schema Conversion Tool.
+
+# 14. Casos de uso de RDS
+
+# 15. Introducción a Aurora
+
+Aurora es el motor de base de datos más robusto de AWS a nivel relacional. Entre sus características encontramos que AWS garantiza que utilizar Aurora nos asegura un performance 5 veces superior a MySQL y hasta 3 veces superior a PostgreSQL. También soporta hasta 64 TB de almacenamiento y 15 réplicas de lectura con niveles de latencia inferiores a 10 ms.
+
+Cuando creamos una base de datos Aurora, realmente creamos un cluster de bases de datos compuesto por una instancia maestra y múltiples réplicas de lectura, todas desplegadas en diferentes zonas de disponibilidad dependiendo de la región que estamos utilizando.
+
+Lecturas recomendadas
+
+AdministraciÃ³n de un clÃºster de base de datos de Amazon Aurora - Amazon Aurora
+
+https://docs.aws.amazon.com/es_es/AmazonRDS/latest/AuroraUserGuide/CHAP_Aurora.html
+
+# 16. Características de Aurora
+
+Además de ser una base de datos muy potente y robusta, Aurora nos permite un nivel de customización muy alto, puede crecer hasta 64 TB y nuestra data esta replicada en múltiples Az.
+
+El endpoint de nuestra instancia principal nos permite conectarnos a la base de datos maestra y especificar las solicitudes de lectura y escritura, también tenemos endpoints para cada una de las replicas de lectura y un último endpoint a nivel de instancia que nos provee control sobre cargas de trabajo de la instancia principal y sus replicas, pero AWS nos recomienda NO utilizar este último endpoint de instancia.
+
+Otras características de Aurora:
+
+ 	-Autoreparación: Guardar la información de la parte dañada en otra parte del disco y reparar el problema automáticamente.
+ 	-Cache Warm: Hacer un precalentamiento de la caché al iniciar las consultas más comunes y sus resultados.
+ 	-Recuperación de accidentes: Si falla la instancia principal, Aurora promueve una réplica de lectura o crea una nueva instancia principal.
+Lecturas recomendadas
+
+How to Stream Data from Amazon DynamoDB to Amazon Aurora using AWS Lambda and Amazon Kinesis Firehose | AWS Database Blog
+
+https://aws.amazon.com/es/blogs/database/how-to-stream-data-from-amazon-dynamodb-to-amazon-aurora-using-aws-lambda-and-amazon-kinesis-firehose/
+
+# 17. Aurora Serverless
+
+Hasta el momento, la única base de datos relacional autoescalable que encontramos en el mercado es Aurora Serverless, una base de datos donde podemos seleccionar la mínima y máxima capacidad por instancia, a medida que la concurrencia sobre la base de datos va creciendo, esta capacidad mínima se incrementa hasta la capacidad máxima que nuestra aplicación debe soportar. Gracias a esto el precio de nuestros servicios disminuye, solo pagamos por el tiempo y la capacidad que realmente utilizamos.
+
+Lecturas recomendadas
+
+In The Works – Amazon Aurora Serverless | AWS News Blog
+
+https://aws.amazon.com/es/blogs/aws/in-the-works-amazon-aurora-serverless/
+
+# 18. Casos de uso de Aurora
