@@ -192,3 +192,19 @@ In The Works – Amazon Aurora Serverless | AWS News Blog
 https://aws.amazon.com/es/blogs/aws/in-the-works-amazon-aurora-serverless/
 
 # 18. Casos de uso de Aurora
+
+Introducción a DynamoDB
+
+# 19. Características de DynamoDB
+
+DynamoDB es el servicio para bases de datos NOSQL de AWS completamente administrado (AWS se encarga de todo el background para que nosotros trabajemos nuestra aplicación), compuesto de varios nodos y distribuido en varias regiones (altamente disponible con replicación en diferentes locaciones), es una base de datos de baja latencia con almacenamiento en caché y es completamente escalable sin downtime de nuestra aplicación.
+
+Este servicio se basa en dos conceptos importantes: las unidades en lectura (RCU, 4kb de bloques por segundo) y las unidades de escritura (WRU, 1kb de bloques por segundo). Con base en estos dos parámetros se determina el costo de nuestras bases de datos y el autoescalamiento.
+
+La unidad fundamental de DynamoDB son las tablas, que están compuestas por items, que están compuestos por atributos (por ejemplo, la tabla trabajadores está compuesta por, trabajadores, cada uno con su nombre, edad, identificación y toda su información). También debemos entender los conceptos de partition key (llaves primarias para el espacio de almacenamiento) , sort keys (para organizar y ordenar la información) y local and global secondary index (otros atributos que podemos utilizar junto a las partition keys u otros atributos para obtener información más especifica y con mejor rendimiento).
+
+Lecturas recomendadas
+
+https://docs.aws.amazon.com/dynamodb/index.html#lang/es_es
+
+https://docs.aws.amazon.com/dynamodb/index.html#lang/es_es
