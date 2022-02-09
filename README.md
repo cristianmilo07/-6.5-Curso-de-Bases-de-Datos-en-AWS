@@ -208,3 +208,117 @@ Lecturas recomendadas
 https://docs.aws.amazon.com/dynamodb/index.html#lang/es_es
 
 https://docs.aws.amazon.com/dynamodb/index.html#lang/es_es
+
+# 20. Consistencia en DynamoDB
+
+La consistencia eventual de lectura NO puede mostrar los resultados de una tarea de escritura reciente cuando consultamos una tabla recién actualizada, además, consume los 4kb de bloques por segundo en las unidades de lectura.
+
+Por otra parte, la consistencia fuerte de lectura funciona correctamente cuando consultamos una tabla y recibimos la respuesta más reciente, pero consume el doble que la consistencia eventual, así que será más costosa. Este tipo de consistencia es el adecuando para aplicaciones y casos de uso muy específicos donde la consulta y la escritura deben estar tan sincronizadas como sea posible.
+
+# 21. Creando nuestra primer tabla en DynamoDB
+
+# 22. Casos de uso en DynamoDB
+
+El servicio de DynamoDB es muy útil en los siguientes casos:
+
+Aplicaciones móviles
+
+ 	-Internet de las cosas (IoT, gracias al real time y su capacidad para ingesta de información)
+ 	-Aplicaciones Web
+ 	-Gaming (gracias a su alta disponibilidad, conexión y por ser no relacional)
+ 	-Manejo de sesiones
+ 	-RealTime (ya que no solo nos permite almacenar nuestra información, también podemos utilizar toda la data en tiempo real para alimentar otros servicios y generar otras arquitecturas)
+  
+-------
+
+# Particiones e índice en dynamoDb
+
+# 24. Índices y particiones en DynamoDB
+
+Cuando utilizamos DynamoDB los datos se almacenan en particiones, al crear una tabla, la base de datos asigna su partición para que esta pueda satisfacer el desempeño aprovisionado, y en ciertas ocasiones puede aumentar el tamaño y la cantidad de particiones para mejorar el desempeño o cuando la partición está llena. El limite de las particiones es 10GB de almacenamiento, pero también necesitamos cambiar de partición cuando superamos los niveles de lectura y escritura (3.000 RCU y 1.000 WCU).
+
+DynamoDB utiliza las claves principales simples y compuestas para almacenar y recuperar nuestros elementos y almacenar nuestra información con la función de hash. Cuando utilizamos claves compuestas debemos especificar los valores de la clave para leer los elementos, y el orden de los elementos depende de su clave de ordenación.
+
+La base de datos esta optimizada para distribuir nuestros elementos de forma uniforme entre las particiones de una tabla, con independencia del número de particiones que configuramos. Sin embargo, la recomendación oficial es elegir una clave de partición con un amplio abanico de valores diferentes, es decir, claves tan aleatorias como sea posible en relación con el número de elementos de la tabla, así evitamos que la información se guarde en particiones cercanas o iguales para optimizar las tareas de lectura y escritura de la base de datos.
+  
+# 23. Base de Datos corporativa para encuestas en DynamoDB
+
+¡Hola! Con este segundo proyecto del curso vas a aprender a poder poner en práctica tus conocimientos en la creación, configuración y conexión a tabla de DynamoDB.
+
+Eres el arquitecto de soluciones de una empresa y el Director de Marketing le ha pedido que debe desplegar una base de datos en la cual se almacenen las respuestas de una encuesta de clima organizacional realizada a los trabajadores de la empresa.
+
+La encuesta tiene 5 preguntas:
+Pregunta 1 - ¿Cuál es su antigüedad en la empresa?
+Pregunta 2 - ¿Está satisfecho con su asignación salarial?
+Pregunta 3 - ¿Está contento con su posición actual?
+Pregunta 4 - ¿Quién es su jefe inmediato?
+Pregunta 5 - ¿Qué sugerencias tiene para la empresa?.
+
+Screen Shot 2018-11-22 at 9.41.02 AM.png
+Crea una tabla en DynamoDB con encriptación habilitada en la cual guardes las respuestas de los 5 trabajadores.
+Configura la tabla con clave principal el ID EMPLEADO.
+Haz una consulta a la tabla para identificar los trabajadores que en la pregunta 2 respondieron “No”.
+Teniendo la tabla actual, tú como arquitecto ¿cuál considerarías que sería un buen índice secundario para agregar a la tabla?
+No olvides compartir tus resultados, desafíos y aciertos en el panel de discusiones.
+
+# 25. Operaciones Scan en DynamoDB
+
+Las Operaciones Scan se encargan de escanear por completo nuestras tablas para examinar todos sus elementos y comprobar si presentan los valores solicitados, pero son muy poco eficientes ya que utilizan bastantes unidades de lectura y aumentan los costos de nuestra base de datos, debemos evitar estas operaciones para tablas grandes.
+
+AWS nos recomienda realizar operaciones pequeñas a lo largo del tiempo en vez de hacer una sola operación muy larga, también podemos configurar límites de tamaño para evitar los escaneos completos y duplicar nuestras tablas para realizar estas operaciones sobre tablas no principales y no afectar su rendimiento.
+
+# 26. Operaciones Query en DynamoDB
+
+Las Operaciones Query (operaciones de consulta) nos permiten buscar elementos en cualquier tabla o índice secundario en base a su clave principal compuesta para optimizar la petición.
+
+En vez de escanear toda la tabla (como en las operaciones Scan), vamos a especificar los criterios de búsqueda utilizando una expresión de condición clave (una cadena que determina los elementos que vamos a leer en la tabla o el índice), especificamos el nombre y valor la clave de partición como una condición de igualdad, podemos realizar consultas utilizando diferentes operadores para encontrar los resultados con mejor precisión.
+
+También podemos limitar el número de elementos que esperamos en los resultados para agilizar las operaciones, pero no obtenemos información tan detallada de la capacidad de lectura que consumimos.
+
+El desafío de esta clase es responder en la sección de comentarios un caso de uso de DynamoDB y cuáles serian sus ventajas frente a los servicios RDS.
+
+# 27. Demo de operaciones Scan y Query en DynamoDB
+
+# 28. ¿Qué es Local Seconday Index?
+
+En una tabla de Dynamo cada ítem debe contener una clave primaria única. Esta llave debe tener una clave de partición y opcionalmente puede tener una range key (Sort Key). Dentro de la partición, los ítems son ordenados por la range key, en los casos donde la información que necesitemos coincida con nuestra range key el acceso a los elementos va a ser mucho más rápido.
+
+En una tabla de Dynamo cada ítem debe contener una clave primaria única. Esta llave debe tener una clave de partición y opcionalmente puede tener una range key (Sort Key). Dentro de la partición, los ítems son ordenados por la range key, en los casos donde la información que necesitemos coincida con nuestra range key el acceso a los elementos va a ser mucho más rápido.
+
+Por ejemplo si tenemos la una tabla que mantiene el puntaje de jugadores en diferentes juegos online.
+
+La tabla Scores está conformada de la siguiente forma:
+
+Llave de partición: GameName → Nombre del Juego
+
+Llave de ordenamiento (Range o Sort Key): LastGameMatch → Fecha de la última partida disputada en el juego.
+
+Para la tabla SCORE podríamos obtener información de los juegos y la fecha de la última partida disputada en el juego por diferente usuario.
+
+Ahora supongamos que necesitamos responder preguntas diferentes como:
+
+¿Cuál es el puntaje máximo en un determinado juego?
+
+¿Cuál es la partida ganada más antigua en el juego?
+
+No sería posible obtener la información solicitada con los índices que se tienen actualmente, tendríamos que hacer una operación SCAN que consumiría muchas unidades de lectura.
+
+Para este caso la mejor solución sería utilizar LSI:
+
+Para este caso la mejor solución sería utilizar LSI:
+
+GameName y Score.
+
+GameName y LastWin.
+
+Con estos LSI podríamos consultar la data con la misma llave de partición (GameName) y obtener resultados sobre otras llaves range como Score y LastWin. Esto nos ayudaría en nuestra tabla a obtener los datos que necesitamos de forma más eficiente y también evitamos el consumo de unidades de lectura de la tabla RCU lo cual se verá reflejado en un ahorro de costos.
+
+# DynamoDB Streams y Replicación
+
+# 29. Características Streams y Replicación en DynamoDB
+
+DynamoDB Streams nos proporciona una secuencia ordenada por tiempo de cambios de los elementos de cualquier tabla, es decir, guarda los cambios de nuestros elementos para que podamos procesar y consumir esta información, podemos ampliar el poder de DynamoDB con replicación entre regiones, análisis continuo con integración a Redshift, notificación de cambios y muchos otros escenarios.
+
+Estos streams capturan una secuencia en orden cronológico de las modificaciones de los elementos de una tabla y almacenan la información por 24 horas. Cada registro de secuencia contiene la información sobre una sola modificación a los datos de un elemento de la tabla. Nuestras aplicaciones pueden obtener acceso a este registro y ver los elements de datos tal y como se encontraban antes y después.
+
+# 30. 
